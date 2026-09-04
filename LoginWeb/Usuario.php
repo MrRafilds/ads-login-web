@@ -1,13 +1,12 @@
 <?php
-class Usuario{
+class Usuario {
     public $codigo, $nome, $login, $senha;
     
-    function __construct ($codigo, $nome, $login, $senha){
+    function __construct($codigo, $nome, $login, $senha) {
         $this->codigo = $codigo;
         $this->nome = $nome;
-        $this->login = $login;
         $this->senha = $senha;
-        
+        $this->login = $login;
     }
     
     function validaUsuarioSenha($login, $senha){
