@@ -1,13 +1,24 @@
 <?php
+include_once './database.php';
+include_once './usuario.php';
+
 session_start();
 if (isset($_POST['usuario'])) {
     $usuario = $_POST['usuario'];
     $senha = $_POST['senha'];
-
-    if ($usuario == 'teste' && $senha == 'teste') {
     
-        $_SESSION['nome'] = 'Osvaldo Cesar';
-    } else {
+    $consulta = mysqli_query($conexao,"select cod, nome, login, senha from usuario where login = '" . $usuario . "'");
+    $dados = mysqli_fetch_assoc($consulta);
+    
+    $user = null;
+    if ($dados != null){
+        $user = new Usuario($dados["cod"], $dados["nome"], $dados["login"], $dados["senha"]);
+    }
+    if ($user != null && $user->validaUsuarioSenha($usuario, $senha)){
+        $_SESSION['user'] = $user;
+       
+    } 
+    else {
         $_SESSION ['msg'] = "Usuário ou senha incorretos!!!'";
         header("Location: index.php");
         exit;
@@ -23,7 +34,7 @@ if (isset($_POST['usuario'])) {
         <title>Página de Menu</title>
     </head>
     <body>
-        <h1>Usuário logado: <?php echo $_SESSION['nome'] ?></h1>
+        <h1>Usuário logado: <?php echo $_SESSION['user']->nome ?></h1>
         <div>
             <a href="menu.php"> Home </a>
             <a href="logout.php"> Sair </a>
